@@ -80,20 +80,62 @@ const localProjects = [
 const localCertificates = [
   {
     id: 1,
-    title: 'Full Stack Web Development',
-    organization: 'Add issuing organization',
-    issueDate: '2025-01-01',
-    credentialId: 'Add credential ID',
-    image: '',
+    title: 'Frontend Development participation',
+    organization: 'WebCraft HAkathon `24',
+    issueDate: '2024-10-13',
+    credentialId: 'MERN-2025-015',
+    featured:false,
+    description: 'Comprehensive program covering end-to-end frontend webdevelopment, Components Advanced Designing, HTML5, and Tailwind CSS, with a focus on building responsive and interactive user interfaces.',
+    skills: ['HTML5', 'CSS3', 'JavaScript', 'React.js', 'Tailwind CSS'],
+    image: '/a.jpeg',
     credentialUrl: '#'
   },
   {
     id: 2,
-    title: 'Add your certificate title',
-    organization: 'Add issuing organization',
-    issueDate: '2024-01-01',
-    credentialId: 'Add credential ID',
-    image: '',
+    title: 'Backend Development Essentials',
+    organization: 'WebCraft Hakathon 2.0',
+    issueDate: '2024-11-19',
+    credentialId: 'FED-2024-118',
+    featured: false,
+    description: 'Advanced modern web engineering focusing on component architecture, state management, responsive design patterns, and cross-browser performance.',
+    skills: ['Node.js', 'Express.js', 'Tailwind CSS', 'TypeScript', 'Responsive Design', 'Cross-Browser Compatibility', 'Performance Optimization', 'Component Architecture', 'State Management'],
+    image: '/b.jpeg',
+    credentialUrl: '#'
+  },
+  {
+    id: 3,
+    title: 'A Cloud Based Intelligent Parking System With QR Code Access',
+    organization: 'ICTACA 2026 International Conference.',
+    issueDate: '2025-04-18',
+    credentialId: '3D-WEB-2024-88',
+    featured: false,
+    description: 'Development of a cloud-based intelligent parking system with QR code access functionality.',
+    skills: ['React Native', 'JavaScript', 'Firebase', 'Node.js', 'QR Code Integration', 'Tailwind CSS'],
+    image: '/c.jpeg',
+    credentialUrl: '#'
+  },
+  {
+    id: 4,
+    title: 'A Cloud Based Intelligent Parking System With QR Code Scanner',
+    organization: 'Final Year Project, 3rd Place Winner',
+    issueDate: '2025-04-16',
+    credentialId: 'JS-2024-052',
+    featured: true,
+    description: 'Development of a cloud-based intelligent parking system with QR code scanning functionality.',
+    skills: ['React Native', 'JavaScript', 'Firebase', 'Node.js', 'QR Code Integration', 'Tailwind CSS'],
+    image: '/d.jpeg',
+    credentialUrl: '#'
+  },
+  {
+    id: 5,
+    title: 'Internship in MERN Stack Development',
+    organization: 'Service Provider Developer Hub',
+    issueDate: '2025-07-25',
+    credentialId: 'NODE-2023-319',
+    featured: true,
+    description: 'Hands-on MERN Stack development engineering implementing scalable microservices, Express middleware, MongoDB aggregation pipelines, and robust authentication mechanisms.',
+    skills: ['Node.js', 'Express.js', 'MongoDB', 'Mongoose', 'API Security'],
+    image: '/e.jpeg',
     credentialUrl: '#'
   }
 ];
@@ -108,6 +150,8 @@ export default function Portfolio() {
 
   const [projects] = useState(localProjects);
   const [certificates] = useState(localCertificates);
+  const [expandedCertId, setExpandedCertId] = useState(1);
+  const [previewCertificate, setPreviewCertificate] = useState(null);
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeModalTab, setActiveModalTab] = useState('Overview');
@@ -115,6 +159,10 @@ export default function Portfolio() {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [contactStatus, setContactStatus] = useState(null);
+
+  const toggleCertificate = (id) => {
+    setExpandedCertId((prev) => (prev === id ? null : id));
+  };
 
   useEffect(() => {
     if (darkMode) {
@@ -125,7 +173,7 @@ export default function Portfolio() {
   }, [darkMode]);
 
   useEffect(() => {
-    if (mobileMenuOpen || selectedProject) {
+    if (mobileMenuOpen || selectedProject || previewCertificate) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -133,7 +181,7 @@ export default function Portfolio() {
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [mobileMenuOpen, selectedProject]);
+  }, [mobileMenuOpen, selectedProject, previewCertificate]);
 
   // GSAP Animations
   useEffect(() => {
@@ -207,6 +255,32 @@ export default function Portfolio() {
       );
 
   const brandDisplayName = (about.name || 'AKTHAR').replace(/\./g, ' ').trim().toUpperCase();
+
+  const journeyMilestones = [
+    {
+      year: '2022',
+      title: 'Started Learning',
+      description: 'Began my web development journey with HTML, CSS and JavaScript.'
+    },
+    {
+      year: '2023',
+      title: 'Built Real Projects',
+      description: 'Created multiple projects and learned modern frameworks.'
+    },
+    ...certificates
+      .slice()
+      .sort((a, b) => new Date(a.issueDate) - new Date(b.issueDate))
+      .map((certificate) => ({
+        year: String(new Date(certificate.issueDate).getFullYear()),
+        title: certificate.title,
+        description: `Earned a certificate in ${certificate.title} from ${certificate.organization}.`
+      })),
+    {
+      year: 'Now',
+      title: 'Looking Ahead',
+      description: 'Excited to build bigger products and collaborate on amazing ideas.'
+    }
+  ];
 
   return (
     <div className="portfolio-container">
@@ -434,33 +508,14 @@ export default function Portfolio() {
           <div className="journey-timeline-section about-stagger">
             <h3 className="journey-title">My Journey</h3>
             <div className="timeline-horizontal-grid">
-              <div className="timeline-step">
-                <div className="timeline-node"></div>
-                <span className="timeline-year">2022</span>
-                <strong className="timeline-heading">Started Learning</strong>
-                <p>Began my web development journey with HTML, CSS and JavaScript.</p>
-              </div>
-
-              <div className="timeline-step">
-                <div className="timeline-node"></div>
-                <span className="timeline-year">2023</span>
-                <strong className="timeline-heading">Built Real Projects</strong>
-                <p>Created multiple projects and learned modern frameworks.</p>
-              </div>
-
-              <div className="timeline-step">
-                <div className="timeline-node"></div>
-                <span className="timeline-year">2024</span>
-                <strong className="timeline-heading">Expanded Skills</strong>
-                <p>Worked with databases, APIs, and cloud deployment.</p>
-              </div>
-
-              <div className="timeline-step">
-                <div className="timeline-node"></div>
-                <span className="timeline-year">Now</span>
-                <strong className="timeline-heading">Looking Ahead</strong>
-                <p>Excited to build bigger products and collaborate on amazing ideas.</p>
-              </div>
+              {journeyMilestones.map((milestone) => (
+                <div key={`${milestone.year}-${milestone.title}`} className="timeline-step">
+                  <div className="timeline-node"></div>
+                  <span className="timeline-year">{milestone.year}</span>
+                  <strong className="timeline-heading">{milestone.title}</strong>
+                  <p>{milestone.description}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -637,81 +692,229 @@ export default function Portfolio() {
           )}
         </AnimatePresence>
 
+        {/* Certificate Image Lightbox Popup Modal */}
+        <AnimatePresence>
+          {previewCertificate && (
+            <div
+              className="modal-backdrop-blur cert-lightbox-backdrop"
+              onClick={() => setPreviewCertificate(null)}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.92, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.92, y: 15 }}
+                transition={{ duration: 0.22 }}
+                className="cert-lightbox-card"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="cert-lightbox-header">
+                  <div className="cert-lightbox-title-wrap">
+                    <span className="cert-pill-verified">Verified Credential</span>
+                    <h3 className="cert-lightbox-title">{previewCertificate.title}</h3>
+                  </div>
+                  <button
+                    type="button"
+                    className="cert-lightbox-close-btn"
+                    onClick={() => setPreviewCertificate(null)}
+                    aria-label="Close certificate preview"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="cert-lightbox-body">
+                  <img
+                    src={previewCertificate.src}
+                    alt={previewCertificate.title}
+                    className="cert-lightbox-img"
+                  />
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+
         {/* ===================== CERTIFICATES SECTION ===================== */}
         <section id="certificates" className="section-shell certificates-layout">
           <div className="section-header-center">
             <div className="section-pill-badge">
-              <span className="blue-dot"></span> CERTIFICATES
+              <span className="blue-dot"></span> CERTIFICATIONS & CREDENTIALS
             </div>
             <h2 className="section-main-heading">
-              Credentials That <span className="blue-word">Support My Work</span>
+              Credentials That <span className="blue-word">Validate My Journey</span>
             </h2>
             <p className="section-subtext">
-              A selection of certifications and courses completed throughout my development journey.
+              An interactive milestone timeline of verified achievements. Click any certificate to expand its details, skills learned, and verification preview.
             </p>
           </div>
 
-          <div className="certificates-grid">
-            {certificates.map((certificate) => (
-              <article key={certificate.id} className="certificate-card">
-                <div className="certificate-timeline-marker" aria-hidden="true">
-                  <span className="certificate-year">
-                    {new Date(certificate.issueDate).getFullYear()}
-                  </span>
-                  <span className="certificate-icon">✓</span>
-                </div>
-                <div className="certificate-content">
-                  <span className="certificate-label">Verified credential</span>
-                  <h3>{certificate.title}</h3>
-                  <p className="certificate-organization">{certificate.organization}</p>
-                  {certificate.image && (
-                    <a
-                      href={certificate.image}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="certificate-image-link"
-                      aria-label={`Open ${certificate.title} certificate photo`}
+          <div className="certificates-timeline-container">
+            {/* Continuous Vertical Timeline Line */}
+            <div className="certificates-timeline-spine" aria-hidden="true"></div>
+
+            <div className="certificates-timeline-list">
+              {certificates
+                .slice()
+                .sort((a, b) => new Date(b.issueDate) - new Date(a.issueDate))
+                .map((certificate, index) => {
+                  const isExpanded = expandedCertId === certificate.id;
+                  const issueYear = new Date(certificate.issueDate).getFullYear();
+                  const formattedDate = new Date(certificate.issueDate).toLocaleDateString('en-US', {
+                    month: 'short',
+                    year: 'numeric'
+                  });
+
+                  return (
+                    <article
+                      key={certificate.id}
+                      className={`certificate-timeline-entry ${certificate.featured ? 'is-featured' : ''} ${isExpanded ? 'is-expanded' : ''}`}
                     >
-                      <img
-                        src={certificate.image}
-                        alt={`${certificate.title} certificate`}
-                        className="certificate-image"
-                        loading="lazy"
-                      />
-                    </a>
-                  )}
-                  <div className="certificate-meta">
-                    <span>
-                      Issued {new Date(certificate.issueDate).toLocaleDateString('en-US', {
-                        month: 'short',
-                        year: 'numeric'
-                      })}
-                    </span>
-                    <span>ID: {certificate.credentialId}</span>
-                  </div>
-                  <time
-                    className="certificate-hover-date"
-                    dateTime={certificate.issueDate}
-                  >
-                    Issued on {new Date(certificate.issueDate).toLocaleDateString('en-US', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric'
-                    })}
-                  </time>
-                  {certificate.credentialUrl && certificate.credentialUrl !== '#' && (
-                    <a
-                      href={certificate.credentialUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="certificate-link"
-                    >
-                      View credential <span aria-hidden="true">↗</span>
-                    </a>
-                  )}
-                </div>
-              </article>
-            ))}
+                      {/* Timeline Node & Year Tag */}
+                      <div className="timeline-node-column">
+                        <div className={`timeline-marker-dot ${certificate.featured ? 'marker-featured' : ''}`}>
+                          {certificate.featured ? '★' : index + 1}
+                        </div>
+                        <span className="timeline-marker-year">{issueYear}</span>
+                      </div>
+
+                      {/* Main Interactive Accordion Card */}
+                      <div className="certificate-interactive-card">
+                        {/* Clickable Header Dropdown Bar */}
+                        <button
+                          type="button"
+                          className="certificate-header-trigger"
+                          onClick={() => toggleCertificate(certificate.id)}
+                          aria-expanded={isExpanded}
+                          aria-controls={`cert-details-${certificate.id}`}
+                        >
+                          <div className="cert-header-content">
+                            <div className="cert-badges-row">
+                              <span className="cert-pill-verified">✓ Verified Credential</span>
+                              {certificate.featured && (
+                                <span className="cert-pill-featured">⭐ Featured</span>
+                              )}
+                              <span className="cert-pill-date">{formattedDate}</span>
+                            </div>
+
+                            <h3 className="cert-header-title">{certificate.title}</h3>
+                            <p className="cert-header-org">{certificate.organization}</p>
+                          </div>
+
+                          <div className="cert-expand-indicator">
+                            <span className="expand-label">{isExpanded ? 'Hide' : 'View'}</span>
+                            <span className={`expand-chevron ${isExpanded ? 'rotated' : ''}`}>▼</span>
+                          </div>
+                        </button>
+
+                        {/* Expandable Dropdown Body */}
+                        <AnimatePresence initial={false}>
+                          {isExpanded && (
+                            <motion.div
+                              id={`cert-details-${certificate.id}`}
+                              key="content"
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.3, ease: 'easeInOut' }}
+                              className="certificate-expandable-drawer"
+                            >
+                              <div className="certificate-drawer-inner">
+                                <div className="cert-split-preview">
+                                  {/* Certificate Image Preview with In-Page Lightbox Trigger */}
+                                  {certificate.image && (
+                                    <div
+                                      className="cert-preview-frame"
+                                      onClick={() =>
+                                        setPreviewCertificate({
+                                          src: certificate.image,
+                                          title: certificate.title
+                                        })
+                                      }
+                                      role="button"
+                                      tabIndex={0}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                          setPreviewCertificate({
+                                            src: certificate.image,
+                                            title: certificate.title
+                                          });
+                                        }
+                                      }}
+                                    >
+                                      <img
+                                        src={certificate.image}
+                                        alt={`${certificate.title} preview`}
+                                        className="cert-preview-thumb"
+                                        loading="lazy"
+                                      />
+                                      <div className="cert-zoom-overlay">
+                                        <span>🔍 Expand Preview</span>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Comprehensive Info Breakdown */}
+                                  <div className="cert-details-breakdown">
+                                    <div className="cert-overview-box">
+                                      <h4 className="drawer-subhead">Key Takeaways & Overview</h4>
+                                      <p className="drawer-desc">{certificate.description}</p>
+                                    </div>
+
+                                    {/* Skills Learned Badges */}
+                                    {certificate.skills && certificate.skills.length > 0 && (
+                                      <div className="cert-skills-group">
+                                        <h4 className="drawer-subhead">Skills Acquired</h4>
+                                        <div className="cert-skills-pills">
+                                          {certificate.skills.map((skill) => (
+                                            <span key={skill} className="cert-skill-pill">
+                                              {skill}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Verification Metadata & Action */}
+                                    <div className="cert-footer-meta">
+                                      <div className="cert-meta-item">
+                                        <span className="meta-key">Credential ID:</span>
+                                        <span className="meta-val font-mono">{certificate.credentialId}</span>
+                                      </div>
+
+                                      {certificate.credentialUrl && certificate.credentialUrl !== '#' ? (
+                                        <a
+                                          href={certificate.credentialUrl}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          className="primary-pill-btn cert-verify-btn"
+                                        >
+                                          Verify Credential ↗
+                                        </a>
+                                      ) : (
+                                        <button
+                                          type="button"
+                                          className="primary-pill-btn cert-verify-btn"
+                                          onClick={() =>
+                                            setPreviewCertificate({
+                                              src: certificate.image,
+                                              title: certificate.title
+                                            })
+                                          }
+                                        >
+                                          View Certificate 🔍
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </article>
+                  );
+                })}
+            </div>
           </div>
         </section>
 
